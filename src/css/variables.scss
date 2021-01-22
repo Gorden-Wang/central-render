@@ -1,0 +1,45 @@
+// Color
+$color-main: #ff5722;
+$color-black: #333333;
+$color-gray: #888888;
+$color-gray2: #e0e0e0;
+$color-gray3: #f5f5f5;
+$color-gray4: #d1d1d1;
+$color-white: white;
+$color-green: #009685;
+// mweb 通用字体颜色
+$m-c-black: rgba(0, 0, 0, 0.87);
+$m-c-gray54: rgba(0, 0, 0, 0.54);
+$m-c-gray38: rgba(0, 0, 0, 0.38);
+
+
+// Default
+$page-font-size: 14px;
+$page-min-width: 1280px;
+$page-bg-color: $color-white;
+$page-text-color: $color-black;
+
+// Link
+$link-color: $color-black;
+$link-hover-color: lighten($color-black, 10);
+
+// Transition
+$transition-duration: 0.3s;
+
+// ZIndex
+// 顶部面板 - 1. 自带全页面遮罩的组件 2. 高于所有内容的提示 
+$zindex-toast: 3000; // 吐司 Toast
+$zindex-message: 3000; // 信息 Message
+$zindex-modal : 2000; // 对话框 Modal 
+$zindex-bottom-sheet: 2000; // 底部浮层 Bottom Sheet
+$zindex-drawer: 2000; // 抽屉导航 Drawer
+$zindex-loading: 2000; // 全局加载 Loading （带遮罩）
+// 悬浮层 - 常驻于某位置的内容，如顶部、底部、悬浮按钮
+$zindex-header: 1000; // 顶部、底部导航 Navigation
+$zindex-secondary-nav: 999; // 二级导航、页面目录 Secondary Navigation
+$zindex-layout: 800; // 悬浮栏目
+$zindex-announcement: 600; // 公告 Announcement
+$zindex-notificatio: 600; // 通知 Notificatio
+$zindex-floating-button: 400; // 浮动按钮 Floating Button
+// 触发层 - 通过用户交互操作触发的小模块
+$zindex-trigger-layer: 200; // 提示气泡 Poptip，下拉菜单 Dropdown ，级联选择器 Cascader Select， 选择器 Select， 局部加载 Loading

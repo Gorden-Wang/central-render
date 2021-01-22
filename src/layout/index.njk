@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <title>webpack/webpack-dev-middleware: A development middleware for webpack</title>
+        <link href="http://localhost:3000/style.css" rel="stylesheet"></script>
+    </head>
+    <body>
+        <div class='tetris-page-wrap'>
+        ${html}
+
+        {% remote "/stuff" %}
+        This content will be replaced with the content from /stuff
+        {% error %}
+        There was an error fetching /stuff
+        {% endremote %}
+
+
+        {% usecomponents %}
+            {% component "4444444" %}{% endcomponent %}
+        {% endusecomponents %}
+        </div>
+        <script src="http://localhost:3000/index.js"></script>
+        {# <script>
+        var event = new CustomEvent('componentLoad', {
+            detail: {
+            id: '.${name}',
+            data: ${JSON.stringify(data)}
+            }
+        });
+        window.dispatchEvent(event)
+        </script> #}
+    </body>
+</html>
