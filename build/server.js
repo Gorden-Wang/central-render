@@ -1,32 +1,37 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const express = require('express');
 const path = require('path');
-const MemoryFileSystem = require('memory-fs')
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
-const isObject = require('is-object');
-const { client, server } = require('./build/config/index')
 
 const app = express();
-const serverCompiler = webpack(server);
-const clientCompiler = webpack(client);
+const {client,server} = require('./config/index');
+const {type: devType, info: devInfo, allComponents: components } = require('./devType.js');
+
+function getCompiler(type,info) {
+    console.log(11111,info);
+    if (type === 'component') {
+        return {
+            serverCompiler: webpack(server({
+                entry: info.entry.server
+            })), 
+            clientCompiler: webpack(client({
+                entry: info.entry.client
+            }))
+        }
+    }
+}
+const {serverCompiler, clientCompiler} = getCompiler(devType,devInfo)
 
 const {
   isInProjectDir,
-  getBasePackageInfo
-} = require('./build/util');
+  getBasePackageInfo,
+  serializeServerBundle,
+} = require('./util');
 const {
   getRenderHTML,
-  getServerBundle
-} = require('./build/render')
+} = require('./render')
 
-function normalizeAssets(assets) {
-  if (isObject(assets)) {
-    return Object.values(assets);
-  }
-
-  return Array.isArray(assets) ? assets : [assets];
-}
 
 isInProjectDir();
 
@@ -80,7 +85,7 @@ app.use(async (req,res,next) => {
     assetsByChunkName,
     outputFileSystem
   } = res.clientAsset;
-
+  console.log(outputPath,assetsByChunkName)
   if (req.url.endsWith('.js') || req.url.endsWith('.css')) {
     
     const fileUrl = path.join(outputPath,req.path)
@@ -104,24 +109,24 @@ app.use(async (req,res,next) => {
   await next()
 })
 app.use(async (req,res) => {
-  const {
-    outputPath,
-    assetsByChunkName,
-    outputFileSystem
-  } = res.serverAsset;
+  const serverBundle = serializeServerBundle(res.serverAsset)
   const baseInfo = getBasePackageInfo();
   const buildInfo = {
     ...baseInfo,
+    devType,
+    devInfo: {
+      ...devInfo,
+      serverBundle,
+    },
+    components,
     client: {
       outputPath: res.clientAsset.outputPath,
       assetsByChunkName: res.clientAsset.assetsByChunkName
-    }
+    },
   }
 
-  outputFileSystem.readFile(`${outputPath}${assetsByChunkName.main[0]}`, async (err,data) => {
-    const html = await getRenderHTML('http://127.0.0.1:7001/vue-render/',data.toString(),buildInfo)
-    res.send(html);
-  })
+  const html = await getRenderHTML('http://127.0.0.1:7001/tetrisapi/vue-render/',null,buildInfo)
+  res.send(html);
   
 });
 

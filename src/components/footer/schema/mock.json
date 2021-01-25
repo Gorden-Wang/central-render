@@ -1,0 +1,45 @@
+{
+    "klook": {
+        "websiteConfig": {
+            "business_license": true
+        },
+        "language": "zh-CN",
+        "currency": "CNY",
+        "is_guest_checkout": false
+    },
+    "snsIcons" : [
+        {
+            "image": "https://res.klook.com/image/upload/v1611063420/uovxd85ifmezwzl3vxcr.svg",
+            "link": "https://www.baidu.com/"
+        },
+        {
+            "image": "https://res.klook.com/image/upload/v1611138420/esf0zzgpyeucjfpejlh7.svg",
+            "link": "https://www.baidu.com/"
+        },
+        {
+            "image": "https://res.klook.com/image/upload/v1611138457/cnffjc8uk8nglp0bnxy3.svg",
+            "link": "https://www.baidu.com/"
+        },
+        {
+            "image": "https://res.klook.com/image/upload/v1611138492/z6uwya3esd4w0ra4qpwe.svg",
+            "link": "https://www.baidu.com/"
+        }
+        
+    ],
+    "email": {
+        "title": "Travel discounts up to 60% off sent straight to your inbox",
+        "subTitle": "By clicking Subscribe, you have agreed to our ",
+        "conditions": {
+            "url": "/conditions/",
+            "text": "Terms & Conditions"
+        },
+        "policy": {
+            "url": "/policy",
+            "text": "Privacy Policy"
+        },
+        "input": {
+            "placeholder":"Enter your email address",
+            "submit": "Subscribe"
+        }
+    }
+}

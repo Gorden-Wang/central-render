@@ -4,7 +4,8 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "dev": "node webpack.config.js"
+    "dev": "node webpack.config.js",
+    "dev:components": "node build/server.js --type=component --target=footer"
   },
   "author": "",
   "license": "ISC",
@@ -40,10 +41,12 @@
     "webpack-cli": "^4.3.1",
     "webpack-dev-middleware": "^4.1.0",
     "webpack-merge": "^5.7.3",
-    "webpack-node-externals": "^2.5.2"
+    "webpack-node-externals": "^2.5.2",
+    "yargs": "^16.2.0"
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "nunjucks-tag": "^1.1.0",
     "vue": "^2.6.12",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2"

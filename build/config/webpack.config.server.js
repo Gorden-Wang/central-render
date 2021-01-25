@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const nodeExternals = require('webpack-node-externals')
 const path = require('path')
 const { baseConfig, cssConfig } = require('./webpack.base.config')
 const { merge } = require('webpack-merge')
-const pkg = require('../package.json')
+
+const rootDir = process.cwd();
+const pkg = require(path.join(rootDir,'package.json'));
+
 const ENV = process.env.NODE_ENV
-const rootDir = path.resolve(__dirname,'../')
 const cssConfigVo = cssConfig(ENV,true)
 const webIgnore = nodeExternals({
     // 不要外置化 webpack 需要处理的依赖模块。

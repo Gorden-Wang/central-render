@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { VueLoaderPlugin } = require('vue-loader')
 const nodeExternals = require('webpack-node-externals')
 const path = require('path')
 const fs = require('fs')
 const merge = require('webpack-merge')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const rootDir = path.resolve(__dirname,'../')
+
+const rootDir = path.resolve(process.cwd())
 const sassOptions = fs.readFileSync(path.join(rootDir, './src/css/index.scss'),'utf8');
 
 const config = {
     output: {
-        filename: 'index.js'
+        filename: '[name].js'
     },
     resolve: {
         // 将 `.ts` 添加为一个可解析的扩展名。
@@ -46,7 +48,7 @@ function cssConfig(env = 'production', isServer = false) {
   } else {
     vueStyleLoader = MiniCssExtractPlugin.loader
     plugin = new MiniCssExtractPlugin({
-      filename: 'style.css'
+      filename: '[name].css'
     })
   }
   const loader = [{

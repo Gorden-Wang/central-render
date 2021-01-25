@@ -1,0 +1,13 @@
+{
+    "name": "footer",
+    "description": "xxx",
+    "version": "0.0.1",
+    "entry": {
+        "client" : {
+            "components/footer/client": "./apps/client.ts"
+        },
+        "server" : {
+            "components/footer/server": "./apps/server.ts"
+        }
+    }
+}

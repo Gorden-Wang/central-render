@@ -7,17 +7,8 @@
     </head>
     <body>
         <div class='tetris-page-wrap'>
-        ${html}
-
-        {% remote "/stuff" %}
-        This content will be replaced with the content from /stuff
-        {% error %}
-        There was an error fetching /stuff
-        {% endremote %}
-
-
         {% usecomponents %}
-            {% component "4444444" %}{% endcomponent %}
+            {% component "components/footer" %}{% endcomponent %}
         {% endusecomponents %}
         </div>
         <script src="http://localhost:3000/index.js"></script>

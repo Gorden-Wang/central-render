@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const process = require('process')
 const path = require('path')
 const fs = require('fs-extra')
 const request = require('request')
+
 function getServerBundle(filePath) {
     if (fs.existsSync(filePath)) {
         return fs.readFileSync(filePath)
@@ -16,7 +18,7 @@ async function getRenderHTML(url,bundleString,buildInfo) {
                 vueTemplate: bundleString,
                 buildInfo: JSON.stringify(buildInfo)
             }
-        }, function(err,httpResponse,body) {
+        }, function (err,httpResponse,body) {
             if (err) { reject(err) }
             resolve(body)
         })

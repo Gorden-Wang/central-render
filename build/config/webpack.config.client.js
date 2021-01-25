@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const { baseConfig,cssConfig } = require('./webpack.base.config')
 const { merge } = require('webpack-merge')
-const pkg = require('../package.json')
-const ENV = process.env.NODE_ENV
-const rootDir = path.resolve(__dirname,'../')
+
+const rootDir = process.cwd();
+const pkg = require(path.join(rootDir,'package.json'));
+
+const ENV = process.env.NODE_ENV;
 
 const webIgnore = {
     vue: 'vue',

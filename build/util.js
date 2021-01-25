@@ -6,6 +6,7 @@ const chalk = require('chalk');
 const assert = require('assert');
 const semver = require('semver');
 const nunjucks = require('nunjucks');
+const Tag = require('nunjucks-tag');
 
 const rootDir =  process.cwd();
 const packageJson = path.join(rootDir, 'package.json');
@@ -49,138 +50,55 @@ function extendsNunjucksTag() {
         autoescape: true
     })
 
-    environment.addExtension('RemoteExtension', new RemoteExtension());
     environment.addExtension('ComponentsExtentions', new ComponentsExtentions());
-    // environment.addExtension('ComponentIncludeExtentions', new ComponentIncludeExtentions());
+    // environment.addExtension('ComponentsExtentions', new ComponentsExtentions());
+    environment.addExtension('ComponentIncludeExtentions', new ComponentIncludeExtentions());
     return environment
 }
-function RemoteExtension() {
-    this.tags = ['remote'];
 
-    this.parse = function (parser, nodes, lexer) {
-        // get the tag token
-        var tok = parser.nextToken();
-
-        // parse the args and move after the block end. passing true
-        // as the second arg is required if there are no parentheses
-        var args = parser.parseSignature(null, true);
-        parser.advanceAfterBlockEnd(tok.value);
-        // console.log(parser.advanceAfterBlockEnd(tok.value));
-        // parse the body and possibly the error block, which is optional
-        var body = parser.parseUntilBlocks('error', 'endtruncate');
-        var errorBody = null;
-
-        if(parser.skipSymbol('error')) {
-            parser.skip(lexer.TOKEN_BLOCK_END);
-            errorBody = parser.parseUntilBlocks('endremote');
-        }
-
-        parser.advanceAfterBlockEnd();
-
-        // See above for notes about CallExtension
-        return new nodes.CallExtension(this, 'run', args, [body, errorBody]);
-    };
-
-    this.run = function (context, url, body, errorBody) {
-        var id = 'el' + Math.floor(Math.random() * 10000);
-        var ret = new nunjucks.runtime.SafeString('<div id="' + id + '">' + body() + '</div>');
-        // var ajax = new XMLHttpRequest();
-
-        // ajax.onreadystatechange = function () {
-        //     if(ajax.readyState == 4) {
-        //         if(ajax.status == 200) {
-        //             document.getElementById(id).innerHTML = ajax.responseText;
-        //         }
-        //         else {
-        //             document.getElementById(id).innerHTML = errorBody();
-        //         }
-        //     }
-        // };
-
-        // ajax.open('GET', url, true);
-        // ajax.send();
-
-        console.log(url,body(),errorBody());
-
-        return ret;
-    };
-}
-
-
-function ComponentsExtentions() {
-    this.tags = ['usecomponents','component']
-    this.parse = function (parser,nodes) {
-        var tok = parser.nextToken();
-        console.log(tok)
-        // parse the args and move after the block end. passing true
-        // as the second arg is required if there are no parentheses
-        var args = []
-        console.log(args)
-        parser.advanceAfterBlockEnd(tok.value);
-        // console.log(parser.advanceAfterBlockEnd(tok.value));
-        // parse the body and possibly the error block, which is optional
-        var errorBody
-        if(parser.skipSymbol('component')) {
-            args.push(parser.parseSignature(null, true));
-            parser.skip(lexer.TOKEN_BLOCK_END);
-            errorBody = parser.parseUntilBlocks('endcomponent');
-        }
-
-
-        // if (tok.value('component')) {
-        //     var body = parser.parseUntilBlocks('component', 'endcomponent');
-        // }
-        var body = parser.parseUntilBlocks('usecomponents', 'endusecomponents');
-        parser.advanceAfterBlockEnd();
-        console.log(body)
-
-        // if(parser.skipSymbol('error')) {
-        //     parser.skip(lexer.TOKEN_BLOCK_END);
-        //     errorBody = parser.parseUntilBlocks('endusecomponents');
-        // }
-        return new nodes.CallExtension(this, 'run', args, [body, errorBody]);
+class ComponentsExtentions extends Tag {
+    constructor() {
+      super('usecomponents');
+      this.nodeName = 'div';
     }
-    this.run = function (context,body,errorBody) {
-        console.log(1111,body())
-        return '1111'
+    render(context, attrs, body) {
+      // provide your custom logic
+      return super.render(context, attrs, body());
     }
 }
 
-// function ComponentIncludeExtentions() {
-//     this.tags = ['usecomponents']
-//     this.parse = function (parser,nodes) {
-//         var tok = parser.nextToken();
+class ComponentIncludeExtentions extends Tag {
+    constructor() {
+      super('component');
+      this.nodeName = 'div';
+    }
+    render(context, attrs, body) {
+      return super.render(context, attrs, body());
+    }
+}
 
-//         // parse the args and move after the block end. passing true
-//         // as the second arg is required if there are no parentheses
-//         var args = parser.parseSignature(null, true);
-//         parser.advanceAfterBlockEnd(tok.value);
-//         // console.log(parser.advanceAfterBlockEnd(tok.value));
-//         // parse the body and possibly the error block, which is optional
-//         var body = parser.parseUntilBlocks('usecomponents', 'endusecomponents');
-//         parser.advanceAfterBlockEnd();
-//         var errorBody = null;
-//         console.log(body)
+function serializeServerBundle({
+    outputFileSystem, 
+    assetsByChunkName, 
+    outputPath
+}) {
 
-//         // if(parser.skipSymbol('error')) {
-//         //     parser.skip(lexer.TOKEN_BLOCK_END);
-//         //     errorBody = parser.parseUntilBlocks('endusecomponents');
-//         // }
-//         return new nodes.CallExtension(this, 'run', args, [body, errorBody]);
-//     }
-//     this.run = function (context,body,errorBody) {
-//         console.log(1111,body())
-//         return '1111'
-//     }
-// }
+    const res = {}
+    for(const [ key, value] of Object.entries(assetsByChunkName)) {
+        res[key] = value.map(dir => {
+            return outputFileSystem.readFileSync(path.join(outputPath,dir), 'utf8')
+        })
+    }
+
+    return res;
+}
+
+
+
 module.exports = {
     isInProjectDir,
     getBasePackageInfo,
     requireUncached,
     extendsNunjucksTag,
+    serializeServerBundle,
 }
-
-
-const nun = extendsNunjucksTag().renderString(layoutNjk)
-
-// console.log(nun)
