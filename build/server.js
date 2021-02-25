@@ -6,10 +6,13 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 
 const app = express();
 const {client,server} = require('./config/index');
-const {type: devType, info: devInfo, allComponents: components } = require('./devType.js');
+const {type: devType, info: devInfo, allComponents: components,target } = require('./devType.js');
+const {
+  getPageInfo
+} = require('./page');
 
 function getCompiler(type,info) {
-    console.log(11111,info);
+    
     if (type === 'component') {
         return {
             serverCompiler: webpack(server({
@@ -19,13 +22,29 @@ function getCompiler(type,info) {
                 entry: info.entry.client
             }))
         }
+    }else {
+      const {combinedEntry,entry: pageEntry} = getPageInfo();
+      const generatEntry = function (type) {
+        return {...combinedEntry[type]}
+      }
+      return {
+        serverCompiler: webpack(server({
+          entry: generatEntry('server')
+        })),
+        clientCompiler: webpack(client({
+          entry: {
+            ...generatEntry('client'),
+            ...pageEntry
+          }
+
+        }))
+      }
     }
 }
 const {serverCompiler, clientCompiler} = getCompiler(devType,devInfo)
 
 const {
   isInProjectDir,
-  getBasePackageInfo,
   serializeServerBundle,
 } = require('./util');
 const {
@@ -110,14 +129,16 @@ app.use(async (req,res,next) => {
 })
 app.use(async (req,res) => {
   const serverBundle = serializeServerBundle(res.serverAsset)
-  const baseInfo = getBasePackageInfo();
+  const baseInfo = getPageInfo();
   const buildInfo = {
     ...baseInfo,
     devType,
+    target,
     devInfo: {
       ...devInfo,
       serverBundle,
     },
+    serverBundle,
     components,
     client: {
       outputPath: res.clientAsset.outputPath,
@@ -125,8 +146,16 @@ app.use(async (req,res) => {
     },
   }
 
-  const html = await getRenderHTML('http://127.0.0.1:7001/tetrisapi/vue-render/',null,buildInfo)
-  res.send(html);
+  console.log(buildInfo.components[0].entry.client)
+
+  if (devType === 'component') {
+    const html = await getRenderHTML('http://127.0.0.1:7001/tetrisapi/vue-render/',buildInfo,req.headers);
+    res.send(html);
+  }else {
+    const html = await getRenderHTML('http://127.0.0.1:7001/tetrisapi/vue-render-page/',buildInfo,req.headers);
+    res.send(html);
+  }
+  
   
 });
 

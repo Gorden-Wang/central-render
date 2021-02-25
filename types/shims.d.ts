@@ -11,3 +11,7 @@ type AnyObjectType = {
 }
 
 type CallbackType = (err: any) => void
+
+interface Window {
+  componentsData: AnyObjectType
+}

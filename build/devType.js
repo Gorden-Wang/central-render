@@ -2,10 +2,9 @@
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const { getComponentListInfomation, getTargetComponentByName } = require('./components')
-// const { client, server } = require('./config/index')
+
 const allComponents = getComponentListInfomation();
 const argv = yargs(hideBin(process.argv)).argv
-// const args = process.argv.slice(2);
 const {
   type,
   target
@@ -23,6 +22,7 @@ if (type === 'component') {
 
   module.exports = {
     type: 'component',
+    target: target,
     info: targetComponent,
     allComponents,
   }
@@ -30,10 +30,12 @@ if (type === 'component') {
 }
 
 if (type === 'page') {
+  const componets = [...allComponents].map(target => {
+    return getTargetComponentByName(target.name, allComponents)
+  });
   module.exports = {
     type: 'page',
-    info: {},
-    allComponents
+    info: componets,
+    allComponents:componets
   }
 }
-

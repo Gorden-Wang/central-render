@@ -34,7 +34,7 @@ export default class DefaultFooter extends Vue {
      return {
      websiteConfig: {},
      utilConfig: {},
-     language: ''
+     language: '',
    }
    } }) readonly klook!: AnyObjectType
 
@@ -47,11 +47,21 @@ export default class DefaultFooter extends Vue {
     return []
   } }) readonly email!: AnyObjectType
 
+  @Prop({ default: () => {
+    return {}
+  } }) readonly headers!: AnyObjectType
+
+
   changSiteModelVisible = false
+
+  created(): void{
+    console.log(process.env.isServer,process.env.isClient)
+  }
 }
 </script>
 
 <style lang="scss">
+@import '~/src/lib/css/variables.scss';
 $prefix: '.default-footer';
 $content-width: 1160px;
 $color-gray: 'red';

@@ -1,16 +1,18 @@
 
 import Vue from 'vue';
-import app from './index';
+import app from './app/index';
 
 window.addEventListener('componentLoad', (e: AnyObjectType) => {
     const {
         id,
         data,
+        name,
     } = e.detail
+    if (name !== 'footer')  return
     const vm = new Vue({
         components: { app },
         render: h => {
-          return h(
+          const res = h(
             'div',
             {
               class: `${id}`,
@@ -21,6 +23,8 @@ window.addEventListener('componentLoad', (e: AnyObjectType) => {
               }),
             ],
           );
+          console.log(res)
+          return res
         },
       });
     vm.$mount(`${e.detail.id}`)

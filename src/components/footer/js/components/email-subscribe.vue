@@ -119,7 +119,8 @@ export default class EmailSubscribe extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '~/src/lib/css/variables.scss';
 .wrapper {
   display: flex;
   position: relative;

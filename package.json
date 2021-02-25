@@ -5,10 +5,12 @@
   "main": "webpack.config.js",
   "scripts": {
     "dev": "node webpack.config.js",
-    "dev:components": "node build/server.js --type=component --target=footer"
+    "dev:components": "node build/server.js --type=component --target=footer",
+    "dev:page": "node build/server.js --type=page"
   },
   "author": "",
   "license": "ISC",
+  "entry": "./src/page/js/index.ts",
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-decorators": "^7.12.12",
@@ -45,8 +47,8 @@
     "yargs": "^16.2.0"
   },
   "dependencies": {
+    "@klook/klook-ui": "^1.16.7",
     "axios": "^0.21.1",
-    "nunjucks-tag": "^1.1.0",
     "vue": "^2.6.12",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2"

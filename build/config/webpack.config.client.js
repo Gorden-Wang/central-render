@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
+const webpack = require('webpack')
 const { baseConfig,cssConfig } = require('./webpack.base.config')
 const { merge } = require('webpack-merge')
 
@@ -33,7 +34,13 @@ const clientConfig = merge(baseConfig, {
         ]
     },
     plugins: [
-        cssConfigVo.plugin
+        cssConfigVo.plugin,
+        new webpack.DefinePlugin({
+            'process.env': {
+                isClient: true,
+                isServer: false,
+            }
+        })
     ]
     // externals: webIgnore
 })

@@ -7,7 +7,7 @@ const merge = require('webpack-merge')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const rootDir = path.resolve(process.cwd())
-const sassOptions = fs.readFileSync(path.join(rootDir, './src/css/index.scss'),'utf8');
+// const sassOptions = fs.readFileSync(path.join(rootDir, './src/css/index.scss'),'utf8');
 
 const config = {
     output: {
@@ -58,9 +58,9 @@ function cssConfig(env = 'production', isServer = false) {
       'css-loader',
       {
         loader: 'sass-loader',
-        options: {
-          additionalData: sassOptions
-        }
+        // options: {
+        //   additionalData: sassOptions
+        // }
       }
     ]
   },

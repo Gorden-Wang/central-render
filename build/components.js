@@ -23,7 +23,6 @@ function getComponentListInfomation() {
 }
 
 function getComponentInfomation(dir) {
-    // console.log(dir)
     const configDir = path.join(dir,'./config.json');
     const mockDataDir = path.join(dir, './schema/mock.json');
     assert(fs.existsSync(configDir) && fs.existsSync(mockDataDir), chalk.red(`${dir} 中必须包含config.json 和 schema/mock.json`))
@@ -50,8 +49,8 @@ function getComponentInfomation(dir) {
     } = entry;
 
 
-    const clientPath = path.join(dir,client[Object.keys(client)[0]]);
-    const serverPath = path.join(dir,server[Object.keys(server)[0]]);
+    const clientPath = path.join(dir,client);
+    const serverPath = path.join(dir,server);
     assert(fs.existsSync(clientPath,chalk.red('client entry 不存在')))
     assert(fs.existsSync(serverPath,chalk.red('server entry 不存在')))
 
@@ -61,10 +60,10 @@ function getComponentInfomation(dir) {
         data: mock,
         entry: {
             client: {
-                [Object.keys(client)[0]]: clientPath
+                [`components/${name}/client`]: clientPath
             },
             server: {
-                [Object.keys(server)[0]]: serverPath
+                [`components/${name}/server`]: serverPath
             }
         },
     }
@@ -79,11 +78,43 @@ function getTargetComponentByName(name,list) {
     return target
 }
 
+function getServerBundle(components, data) {
+    const res = [...components]
+    res.forEach((component) => {
+        
+        const serverBundle = serializeServerBundle(component,data)
+        Object.assign(component, {
+            serverBundle,
+        })
+        // console.log(res)
+    })
+    return res;
+
+    // console.log(name,server)
+}
+
+function serializeServerBundle(component,{
+    outputFileSystem = fs, 
+    assetsByChunkName, 
+    outputPath
+}) {
+    const {
+        name,
+    } = component
+    for(const [ key, value] of Object.entries(assetsByChunkName)) {
+        if (`components/${name}/server` === key) {
+            return value.map(dir => {
+                return outputFileSystem.readFileSync(path.join(outputPath,dir), 'utf8')
+            })[0]
+        }
+        
+    }
+
+    return res;
+}
+
 module.exports = {
     getComponentListInfomation,
     getTargetComponentByName,
+    getServerBundle,
 }
-
-
-// console.log()
-console.log(getComponentListInfomation())

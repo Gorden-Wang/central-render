@@ -1,0 +1,40 @@
+ <!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <meta name="tetris-page-version" version="{{version}}">
+        <title>{{ name }}</title>
+        {{ requireAssets('css') | safe }}
+    </head>
+    <body>
+            {# {{ this() | dump }} #}
+        <div>
+            {{ getTargetCpt('header') | safe }}
+        </div>
+        <div class='tetris-page-wrap'>
+         {% for item in componentMetas %}
+            {# {{ item.html | safe }} #}
+         {% endfor %}
+        </div>
+
+        <div style="position:fixed;bottom:0">
+            {{ getTargetCpt('footer') | safe }}
+        </div>
+        {{ requireAssets('js') | safe }}
+        <script>
+        var componentDatas = {{ componentsDatas() | dump | safe}}
+         {% for item in componentMetas %}
+             window.dispatchEvent(new CustomEvent('componentLoad', {
+                detail: {
+                    id: '.{{item.componentId}}',
+                    name: '{{item.name}}',
+                    data: {{item.data | dump | safe}}
+                }
+            }));
+        {% endfor %}
+
+        
+        </script>
+        
+    </body>
+</html>

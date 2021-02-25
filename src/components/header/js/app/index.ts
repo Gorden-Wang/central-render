@@ -1,6 +1,5 @@
 import { VueConstructor } from 'vue'
 import { Vue } from 'vue-property-decorator'
-import './css/index.scss'
 
 const plugin = {
     install(vue: VueConstructor) {
@@ -10,5 +9,5 @@ const plugin = {
 }
 Vue.use(plugin)
 
-export { default } from '~/components/footer/main.vue'
+export { default } from '~/components/header/js/components/main.vue'
 

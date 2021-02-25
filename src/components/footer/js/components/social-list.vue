@@ -54,6 +54,7 @@ export default class SocialList extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '~/src/lib/css/variables.scss';
 .wrapper {
   display: flex;
   justify-content: space-between;
